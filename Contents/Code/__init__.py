@@ -5,7 +5,7 @@ POPULAR_URL = 'http://sweflix.com/api-v3/json.php?lim=200&orderBy=hits'
 GENRE_URL = 'http://sweflix.com/api-v3/json.php?lim=200&cat=%s'
 OMDB_URL = 'http://www.omdbapi.com/?i=%s'
 
-GENRES = ['Action', 'Adventure', 'Animation', 'Barn', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History', 'Horror', 'Musical', 'Romance', 'Sci-Fi', 'Sport', 'Svenskt', 'Thriller']
+GENRES = ['Action', 'Adventure', 'Animation', 'Barn', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Svenskt', 'Thriller']
 
 RE_IMDB_ID = Regex('^tt\d{7}$')
 RE_DURATION = Regex('(?:(\d+)h)?(\d+)min')
