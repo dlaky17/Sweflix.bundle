@@ -1,0 +1,104 @@
+HTTP_HEADERS = {
+	'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
+	'Referer': 'http://sweflix.com/'
+}
+
+JSON_URL = 'http://sweflix.com/api-v3/json.php?id=%s'
+OMDB_URL = 'http://www.omdbapi.com/?i=%s'
+
+RE_IMDB_ID = Regex('^tt\d{7}$')
+RE_DURATION = Regex('(?:(\d+)h)?(\d+)min')
+
+####################################################################################################
+def NormalizeURL(url):
+
+	return url
+
+####################################################################################################
+def MetadataObjectForURL(url):
+
+	json_obj = GetJSON(url)
+
+	if json_obj['type'] not in ('barn', 'film'):
+		raise Ex.MediaNotAvailable
+
+	title = String.DecodeHTMLEntities(json_obj['titel'])
+	summary = String.DecodeHTMLEntities(json_obj['plot'])
+
+	imdb_id = json_obj['imdb']
+
+	if (title is None or summary is None) and (imdb_id is not None and RE_IMDB_ID.search(imdb_id)):
+		omdb_json_obj = JSON.ObjectFromURL(OMDB_URL % imdb_id, headers=HTTP_HEADERS)
+		title = omdb_json_obj['Title'] if title is None else title
+		summary = omdb_json_obj['Plot'] if summary is None else summary
+
+	if title is None:
+		raise Ex.MediaNotAvailable
+
+	thumb = json_obj['poster']
+	genres = json_obj['cat'].split(', ')
+	year = int(json_obj['year']) if json_obj['year'] is not None or json_obj['year'] != "" else None
+
+	try: rating = float(json_obj['imdbrate'])
+	except: rating = None
+
+	try:
+		duration = json_obj['duration'].replace(' ', '')
+		(h, m) = RE_DURATION.search(duration).groups()
+		if h:
+			minutes = int(m) + int(h)*60
+		duration = minutes * 60 * 1000
+	except:
+		duration = None
+
+	return MovieObject(
+		title = String.DecodeHTMLEntities(title),
+		summary = String.DecodeHTMLEntities(summary),
+		thumb = Resource.ContentsOfURLWithFallback(url=thumb, fallback='icon-default.jpg'),
+		genres = genres,
+		year = year,
+		rating = rating,
+		duration = duration
+	)
+
+####################################################################################################
+def MediaObjectsForURL(url):
+
+	return [
+		MediaObject(
+			parts = [
+				PartObject(key=Callback(PlayVideo, url=url))
+			],
+			video_resolution = '720',
+			container = Container.MP4,
+			video_codec = VideoCodec.H264,
+			audio_codec = AudioCodec.AAC,
+			audio_channels = 2,
+			optimized_for_streaming = True
+		)
+	]
+
+####################################################################################################
+@indirect
+def PlayVideo(url):
+
+	json_obj = GetJSON(url)
+	video_url = json_obj['mp4']
+
+	return IndirectResponse(VideoClipObject, key=video_url)
+
+####################################################################################################
+def GetJSON(url):
+
+	id = url.split('#')[-1]
+	json = HTTP.Request(JSON_URL % id, headers=HTTP_HEADERS).content
+
+	if json.startswith('Fel'):
+		raise Ex.MediaNotAvailable
+
+	json_obj = JSON.ObjectFromString(json)
+
+	if len(json_obj) < 1:
+		raise Ex.MediaNotAvailable
+
+	return json_obj[0]
