@@ -22,8 +22,8 @@ def MetadataObjectForURL(url):
 	if json_obj['type'] not in ('barn', 'film'):
 		raise Ex.MediaNotAvailable
 
-	title = String.DecodeHTMLEntities(json_obj['titel'])
-	summary = String.DecodeHTMLEntities(json_obj['plot'])
+	title = json_obj['titel']
+	summary = json_obj['plot']
 
 	imdb_id = json_obj['imdb']
 
