@@ -69,12 +69,13 @@ def ListMovies(title, url):
 
 		try:
 			duration = movie['duration'].replace(' ', '')
+			ms = 0
 			(h, m) = RE_DURATION.search(duration).groups()
 			if h:
-				minutes = int(m) + int(h)*60
-			duration = minutes * 60 * 1000
+				ms += int(h) * 60 * 60 * 1000
+			ms += int(m) * 60 * 1000
 		except:
-			duration = None
+			ms = None
 
 		oc.add(MovieObject(
 			url = url,
@@ -84,7 +85,7 @@ def ListMovies(title, url):
 			genres = genres,
 			year = year,
 			rating = rating,
-			duration = duration
+			duration = ms
 		))
 
 	return oc
