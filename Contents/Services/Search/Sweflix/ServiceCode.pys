@@ -5,7 +5,6 @@ HTTP_HEADERS = {
 
 JSON_URL = 'http://sweflix.com/api-v3/json.php?lim=9999'
 
-RE_IMDB_ID = Regex('^tt\d{7}$')
 RE_DURATION = Regex('(?:(\d+)h)?(\d+)min')
 
 ####################################################################################################
