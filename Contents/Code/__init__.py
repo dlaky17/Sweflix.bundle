@@ -34,6 +34,9 @@ def MainMenu():
 	oc.add(DirectoryObject(key = Callback(ListMovies, title='Popular', url=POPULAR_URL), title='Popular'))
 	oc.add(DirectoryObject(key = Callback(ListGenres), title='Genres'))
 
+	if Client.Product != 'PlexConnect':
+		oc.add(SearchDirectoryObject(identifier='com.plexapp.plugins.sweflix', title='Search', summary='Search Movies on Sweflix', prompt='Search for...'))
+
 	return oc
 
 ####################################################################################################

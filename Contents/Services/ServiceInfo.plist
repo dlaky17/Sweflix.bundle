@@ -12,5 +12,13 @@
 			</array>
 		</dict>
 	</dict>
+	<key>Search</key>
+	<dict>
+		<key>Sweflix</key>
+		<dict>
+			<key>Identifier</key>
+			<string>com.plexapp.plugins.sweflix</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
