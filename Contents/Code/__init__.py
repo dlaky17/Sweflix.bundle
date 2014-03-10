@@ -30,7 +30,7 @@ def MainMenu():
 
 	oc = ObjectContainer()
 
-	oc.add(DirectoryObject(key = Callback(ListMovies, title='Last Uploads', url=LATEST_URL), title='Last Uploads'))
+	oc.add(DirectoryObject(key = Callback(ListMovies, title='Latest Uploads', url=LATEST_URL), title='Latest Uploads'))
 	oc.add(DirectoryObject(key = Callback(ListMovies, title='Popular', url=POPULAR_URL), title='Popular'))
 	oc.add(DirectoryObject(key = Callback(ListGenres), title='Genres'))
 
